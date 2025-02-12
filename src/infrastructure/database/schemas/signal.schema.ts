@@ -16,7 +16,7 @@ class XRay {
 @Schema({
   collection: 'signal',
 })
-export class SignalEntity extends AbstractSchema {
+export class SignalModel extends AbstractSchema {
   @Prop({ required: true })
   deviceId: string;
 
@@ -35,4 +35,4 @@ export class SignalEntity extends AbstractSchema {
   data: Array<XRay>;
 }
 
-export const SignalSchema = SchemaFactory.createForClass(SignalEntity);
+export const SignalSchema = SchemaFactory.createForClass(SignalModel);

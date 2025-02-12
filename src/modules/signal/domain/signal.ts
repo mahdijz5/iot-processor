@@ -6,7 +6,7 @@ import { Xray } from './xray';
 export type Signal = Signal.Base;
 export namespace Signal {
   export type Base = {
-    id: SignalId;
+    id: Id;
     deviceId: NonEmptyString;
     time: Timestamp;
     dataLength: DataLength;
@@ -14,11 +14,11 @@ export namespace Signal {
     data: Array<Xray>;
   };
 
-  export type SignalId = SignalId.Type;
-  export namespace SignalId {
+  export type Id = Id.Type;
+  export namespace Id {
     export type Type = Brand<string, 'signalId'>;
-    export const is = (value: string): value is SignalId => ObjectId.is(value);
-    export const mk = (value: string): Option<SignalId> =>
+    export const is = (value: string): value is Id => ObjectId.is(value);
+    export const mk = (value: string): Option<Id> =>
       is(value) ? some(value) : none;
     export const mkUnsafe = (value: string) => {
       if (!is(value)) throw new Error('Invalid Id');
@@ -54,7 +54,7 @@ export namespace Signal {
 
   const signalSchema = z
     .object({
-      id: z.string().refine(SignalId.is, { message: 'Invalid time' }),
+      id: z.string().refine(Id.is, { message: 'Invalid time' }),
       deviceId: z
         .string()
         .refine(NonEmptyString.is, { message: 'Invalid deviceId' }),
@@ -63,6 +63,7 @@ export namespace Signal {
     .required();
 
   export const mk = (value: {
+    id: string;
     deviceId: string;
     time: number;
     data: Array<{
