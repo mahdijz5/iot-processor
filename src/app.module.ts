@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
-import { LoggerModule } from './logger'; 
+import { LoggerModule } from './logger';
+import { RabbitModule } from './rmq';
+import { SignalConsumer } from './modules/signal/consumer/signal.consumer';
 
 @Module({
-  imports: [LoggerModule],
+  imports: [RabbitModule, LoggerModule],
   controllers: [],
-  providers: [],
+  providers: [SignalConsumer],
 })
 export class AppModule {}

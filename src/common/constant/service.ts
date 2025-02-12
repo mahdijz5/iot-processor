@@ -1,1 +1,0 @@
-export const XRAY_DATA_SERVICE = "xray-data"
