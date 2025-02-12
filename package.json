@@ -29,7 +29,6 @@
     "amqp-connection-manager": "^4.1.14",
     "amqplib": "^0.10.5",
     "dotenv": "^16.4.7",
-    "fp-ts": "^2.16.9",
     "mongoose": "^8.10.0",
     "nestjs-pino": "^4.3.0",
     "pino": "^9.6.0",

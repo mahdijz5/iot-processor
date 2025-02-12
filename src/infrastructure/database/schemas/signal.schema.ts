@@ -1,15 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { AbstractSchema } from '../abstract.schema';
 
-@Schema()
 class XRay {
-  @Prop({ type: Number })
   time: number;
-  @Prop({ type: Number })
   speed: number;
-  @Prop({ type: Number })
   x: number;
-  @Prop({ type: Number })
   y: number;
 }
 

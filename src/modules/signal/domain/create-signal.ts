@@ -22,7 +22,7 @@ export namespace CreateSignal {
     })
     .required();
 
-  export const mk = (value: {
+  export type MkInput = {
     deviceId: string;
     time: number;
     data: Array<{
@@ -31,15 +31,16 @@ export namespace CreateSignal {
       x: number;
       y: number;
     }>;
-  }): CreateSignal => {
+  };
+
+  export const mk = (value: MkInput): CreateSignal => {
     const validateData = signalSchema.parse(value) as Required<
       z.infer<typeof signalSchema>
     >;
     const dataLength = value.data.length;
     let dataVolume = 0;
-
     const data: Xray[] = value.data.reduce((acc, curr) => {
-      dataVolume += curr[1].length;
+      dataVolume += Object.keys(curr).length;
       return [...acc, Xray.mk(curr)];
     }, []);
 

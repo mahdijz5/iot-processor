@@ -1,4 +1,3 @@
-import { none, Option, some } from 'fp-ts/Option';
 import { Brand, NonEmptyString, ObjectId, Timestamp } from 'src/common/types';
 import { z } from 'zod';
 import { Xray } from './xray';
@@ -18,8 +17,7 @@ export namespace Signal {
   export namespace Id {
     export type Type = Brand<string, 'signalId'>;
     export const is = (value: string): value is Id => ObjectId.is(value);
-    export const mk = (value: string): Option<Id> =>
-      is(value) ? some(value) : none;
+    export const mk = (value: string): Id | null => (is(value) ? value : null);
     export const mkUnsafe = (value: string) => {
       if (!is(value)) throw new Error('Invalid Id');
       return value;
@@ -31,8 +29,8 @@ export namespace Signal {
     export type Type = Brand<number, 'DataLength'>;
     export const is = (value: number): value is DataLength =>
       typeof value === 'number' && value >= 0;
-    export const mk = (value: number): Option<DataLength> =>
-      is(value) ? some(value) : none;
+    export const mk = (value: number): null | DataLength =>
+      is(value) ? value : null;
     export const mkUnsafe = (value: number) => {
       if (!is(value)) throw new Error('Invalid DataLength');
       return value;
@@ -44,8 +42,8 @@ export namespace Signal {
     export type Type = Brand<number, 'DataVolume'>;
     export const is = (value: number): value is DataVolume =>
       typeof value === 'number' && value >= 0;
-    export const mk = (value: number): Option<DataVolume> =>
-      is(value) ? some(value) : none;
+    export const mk = (value: number): DataVolume | null =>
+      is(value) ? value : null;
     export const mkUnsafe = (value: number) => {
       if (!is(value)) throw new Error('Invalid DataLength');
       return value;
@@ -62,7 +60,7 @@ export namespace Signal {
     })
     .required();
 
-  export const mk = (value: {
+  export type MkInput = {
     id: string;
     deviceId: string;
     time: number;
@@ -72,7 +70,9 @@ export namespace Signal {
       x: number;
       y: number;
     }>;
-  }): Signal => {
+  };
+
+  export const mk = (value: MkInput): Signal => {
     const validateData = signalSchema.parse(value) as Required<
       z.infer<typeof signalSchema>
     >;
@@ -80,7 +80,7 @@ export namespace Signal {
     let dataVolume = 0;
 
     const data: Xray[] = value.data.reduce((acc, curr) => {
-      dataVolume += curr[1].length;
+      dataVolume += Object.keys(curr).length;
       return [...acc, Xray.mk(curr)];
     }, []);
 

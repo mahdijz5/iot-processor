@@ -1,17 +1,23 @@
-import { match, Option } from 'fp-ts/lib/Option';
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import {
   NonEmptyString,
   NonNegativeNumber,
+  ObjectId,
   PositiveNumber,
 } from 'src/common/types';
 import { CreateSignal } from 'src/modules/signal/domain/create-signal';
 import { Signal } from 'src/modules/signal/domain/signal';
+import { UpdateSignal } from 'src/modules/signal/domain/update-signal';
 import { SignalModel } from '../schemas/signal.schema';
 import { SignalManagerInterface } from './signal.manager.interface';
 
-export abstract class SignalManager implements SignalManagerInterface {
-  constructor(protected readonly model: Model<SignalModel>) {}
+@Injectable()
+export class SignalManager implements SignalManagerInterface {
+  constructor(
+    @InjectModel(SignalModel.name) readonly model: Model<SignalModel>,
+  ) {}
 
   async create(data: CreateSignal): Promise<Signal> {
     const model = new this.model({
@@ -23,10 +29,10 @@ export abstract class SignalManager implements SignalManagerInterface {
     return Signal.mk({ ...model.toObject(), id: model._id.toString() });
   }
 
-  async update(id: Signal.Id, data: Signal): Promise<Signal> {
+  async update(data: UpdateSignal): Promise<Signal> {
     const model = await this.model.findOneAndUpdate(
       {
-        id: new Types.ObjectId(id),
+        id: new Types.ObjectId(data.id),
       },
       {
         ...data,
@@ -64,25 +70,16 @@ export abstract class SignalManager implements SignalManagerInterface {
 
   async pagination(
     filter: {
-      id: Option<Signal.Id>;
-      deviceId: Option<NonEmptyString>;
-      dataLength: Option<Signal.DataLength>;
-      dataVolume: Option<Signal.DataVolume>;
+      id?: ObjectId;
+      deviceId?: NonEmptyString;
+      dataLength?: PositiveNumber;
+      dataVolume?: PositiveNumber;
     },
     page: PositiveNumber,
     limit: PositiveNumber,
   ): Promise<[Signal[], NonNegativeNumber]> {
-    const filterObj = Object.fromEntries(
-      Object.entries(filter).map(([key, value]) => [
-        key,
-        match(
-          () => null,
-          (val) => val,
-        )(value as Option<unknown>),
-      ]),
-    );
     const query: any = [
-      { $match: { deletedAt: null, ...filterObj } },
+      { $match: { deletedAt: null, ...filter } },
       { $skip: (page - 1) * limit },
       { $limit: limit },
     ];
@@ -91,7 +88,7 @@ export abstract class SignalManager implements SignalManagerInterface {
       {
         $facet: {
           result: query,
-          count: [{ $match: filterObj }, { $count: 'count' }],
+          count: [{ $match: filter }, { $count: 'count' }],
         },
       },
     ]);
