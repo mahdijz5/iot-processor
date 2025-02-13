@@ -39,7 +39,7 @@ export namespace UpdateSignal {
 
   export const mk = (value: MkInput): UpdateSignal => {
     const validateData = signalSchema.parse(value);
-    const id = Signal.Id.mk(value.id);
+    const id = Signal.Id.mkUnsafe(value.id);
 
     let result: UpdateSignal = { ...validateData, id };
     if (value.data) {

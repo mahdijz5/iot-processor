@@ -13,16 +13,15 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ApiCustomOkResponse } from 'src/common/decorator/api-ok-response.decorator';
 import { z } from 'zod';
 
-import { SignalService } from '../service/signal.service';
 import { SignalResDto } from 'src/common/dto';
+import { SignalService } from '../service/signal.service';
+import { SignalPaginationDto, SignalPaginationSchema } from './dto';
+import { IdSignalDtoSchema } from './dto/id-signal.dto';
 import {
   UpdateSignalDto,
   UpdateSignalDtoSchema,
   XrayDataSchema,
 } from './dto/update-signal.dto';
-import { ObjectId } from 'src/common/types';
-import { IdSignalDtoSchema } from './dto/id-signal.dto';
-import { SignalPaginationDto, SignalPaginationSchema } from './dto';
 
 @ApiTags('Signal')
 @Controller({ path: 'signal', version: '1' })

@@ -1,9 +1,7 @@
 import { Module } from '@nestjs/common';
-import { LoggerModule } from './logger';
-import { RabbitModule } from './rmq';
-import { SignalConsumer } from './modules/signal/consumer/signal.consumer';
-import { SignalModule } from './modules/signal/signal.module';
 import { DatabaseModule } from './infrastructure/database/database.module';
+import { LoggerModule } from './logger';
+import { SignalModule } from './modules/signal/signal.module';
 
 @Module({
   imports: [DatabaseModule, SignalModule, LoggerModule],

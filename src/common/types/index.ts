@@ -45,7 +45,7 @@ export type PositiveNumber = PositiveNumber.Type;
 export namespace PositiveNumber {
   export type Type = Brand<number, 'PositiveNumber'>;
   export const is = (value: number): value is PositiveNumber =>
-    typeof value === 'number' && value > 0;
+    typeof value === 'number' && Number.isFinite(value) && value > 0;
   export const mk = (value: number): PositiveNumber | null =>
     is(value) ? value : null;
   export const mkUnsafe = (value: number) => {
@@ -57,8 +57,9 @@ export namespace PositiveNumber {
 export type ValidNumber = ValidNumber.Type;
 export namespace ValidNumber {
   export type Type = Brand<number, 'ValidNumber'>;
+
   export const is = (value: number): value is ValidNumber =>
-    typeof value === 'number';
+    typeof value === 'number' && Number.isFinite(value) && !isNaN(value);
   export const mk = (value: number): ValidNumber | null =>
     is(value) ? value : null;
   export const mkUnsafe = (value: number) => {
@@ -70,8 +71,9 @@ export namespace ValidNumber {
 export type NonNegativeNumber = NonNegativeNumber.Type;
 export namespace NonNegativeNumber {
   export type Type = Brand<number, 'NonNegativeNumber'>;
+
   export const is = (value: number): value is NonNegativeNumber =>
-    typeof value === 'number' && value >= 0;
+    typeof value === 'number' && Number.isFinite(value) && value >= 0;
   export const mk = (value: number): NonNegativeNumber | null =>
     is(value) ? value : null;
   export const mkUnsafe = (value: number) => {
