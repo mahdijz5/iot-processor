@@ -1,0 +1,55 @@
+services:
+  app:
+      container_name: app
+      restart: unless-stopped
+      build:
+          context: .
+          dockerfile: Dockerfile
+          target: prod
+      networks:
+          - iot
+      depends_on:
+          - mongo
+          - rabbitmq
+  mongo:
+    ports:
+      - '27020:27017'
+    image: docker.io/bitnami/mongodb:7.0
+    environment:
+      MONGODB_ADVERTISED_HOSTNAME: ${MONGO_HOSTNAME}
+      MONGODB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    volumes:
+      - 'mongo_vol:/bitnami/mongodb'
+    networks:
+      - iot
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    hostname: rabbitmq
+    restart: always
+    ports:
+      - 5675:5672
+      - 15653:15672
+    volumes:
+      - rabbitmq_vol:/var/lib/rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+    env_file:
+      - .env
+    networks:
+      - iot
+
+networks:
+  iot:
+    name: iot
+    driver: bridge
+    attachable: true
+    external: true
+volumes:
+  mongo_vol:
+    driver: local
+  rabbitmq_vol:
+    driver: local
+

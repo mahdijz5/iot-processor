@@ -8,10 +8,10 @@ import { AllExceptionFilter } from './common/filter';
 import { ResponseInterceptor } from './common/Interceptor';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { bufferLogs: true });
-  const logger = app.get(Logger);
+  const app = await NestFactory.create(AppModule, { logger: ['log', 'error', 'warn', 'debug', 'verbose']});
+ const logger = app.get(Logger);
 
-  app.useLogger(logger);
+ app.useLogger(logger);
   app.useGlobalFilters(new AllExceptionFilter());
   app.useGlobalInterceptors(new ResponseInterceptor());
 
@@ -24,7 +24,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup(config.app.docPath, app, document);
 
-  await app.listen(PORT);
+  await app.listen(PORT,"0.0.0.0");
   logger.log(`Application is running on ${await app.getUrl()}...`);
 }
 bootstrap();
