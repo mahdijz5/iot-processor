@@ -16,5 +16,5 @@ COPY .env.prod .env
 EXPOSE 33000
 EXPOSE 14444
 
-CMD ["node", "-r", "dotenv/config", "dist/main"]
+CMD ["node",  "dist/main"]
 
