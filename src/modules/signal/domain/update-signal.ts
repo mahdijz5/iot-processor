@@ -14,14 +14,16 @@ export namespace UpdateSignal {
     data?: Array<Xray>;
   };
 
-  const signalSchema = z
-    .object({
-      deviceId: z
-        .string()
-        .refine(NonEmptyString.is, { message: 'Invalid deviceId' }),
-      time: z.number().refine(Timestamp.is, { message: 'Invalid timestamp' }),
-    })
-    .optional();
+  const signalSchema = z.object({
+    deviceId: z
+      .string()
+      .refine(NonEmptyString.is, { message: 'Invalid deviceId' })
+      .optional(),
+    time: z
+      .number()
+      .refine(Timestamp.is, { message: 'Invalid timestamp' })
+      .optional(),
+  });
 
   export type MkInput = {
     id: string;

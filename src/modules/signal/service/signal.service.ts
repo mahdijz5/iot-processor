@@ -6,6 +6,7 @@ import { UpdateSignal } from '../domain/update-signal';
 import { UpdateSignalType } from '../types/update-signal.type';
 import { SignalPaginationType } from '../types';
 import { PaginationResDto } from 'src/common/dto';
+import { ObjectId } from 'src/common/types';
 
 @Injectable()
 export class SignalService {
@@ -14,7 +15,7 @@ export class SignalService {
     private readonly signalManager: SignalManagerInterface,
   ) {}
 
-  async findOne(id: string) {
+  async findOne(id: ObjectId) {
     try {
       return await this.signalManager.findOne(Signal.Id.mkUnsafe(id));
     } catch (error) {
@@ -22,7 +23,7 @@ export class SignalService {
     }
   }
 
-  async remove(id: string) {
+  async remove(id: ObjectId) {
     try {
       return await this.signalManager.remove(Signal.Id.mkUnsafe(id));
     } catch (error) {
@@ -30,7 +31,7 @@ export class SignalService {
     }
   }
 
-  async update(id: string, data: UpdateSignalType) {
+  async update(id: ObjectId, data: UpdateSignalType) {
     try {
       const updateSignal = UpdateSignal.mk({ id, ...data });
       return await this.signalManager.update(updateSignal);

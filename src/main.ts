@@ -4,12 +4,16 @@ import { Logger } from 'nestjs-pino';
 import { config } from './config';
 
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { AllExceptionFilter } from './common/filter';
+import { ResponseInterceptor } from './common/Interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
   const logger = app.get(Logger);
 
   app.useLogger(logger);
+  app.useGlobalFilters(new AllExceptionFilter());
+  app.useGlobalInterceptors(new ResponseInterceptor());
 
   const PORT = config.app.port;
 

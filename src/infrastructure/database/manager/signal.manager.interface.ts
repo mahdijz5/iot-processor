@@ -9,7 +9,6 @@ import { Signal } from 'src/modules/signal/domain/signal';
 import { UpdateSignal } from 'src/modules/signal/domain/update-signal';
 
 type SignalFilter = {
-  id?: ObjectId;
   deviceId?: NonEmptyString;
   dataLength?: PositiveNumber;
   dataVolume?: PositiveNumber;

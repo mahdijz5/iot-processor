@@ -12,6 +12,7 @@ import {
 } from 'src/infrastructure/database/schemas/signal.schema';
 import { DatabaseModule } from 'src/infrastructure/database/database.module';
 import { SignalService } from './service/signal.service';
+import { SignalController } from './controller/signal.controller';
 
 @Module({
   imports: [
@@ -24,7 +25,7 @@ import { SignalService } from './service/signal.service';
     DatabaseModule,
     RabbitModule,
   ],
-  controllers: [],
+  controllers: [SignalController],
   providers: [
     SignalConsumer,
     SignalTransformService,

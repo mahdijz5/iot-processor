@@ -16,7 +16,5 @@ type Xray = {
 export type UpdateSignalType = {
   deviceId?: NonEmptyString;
   time?: Timestamp;
-  dataLength?: PositiveNumber;
-  dataVolume?: PositiveNumber;
   data?: Array<Xray>;
 };

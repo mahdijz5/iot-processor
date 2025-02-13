@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import {
@@ -12,6 +12,7 @@ import { Signal } from 'src/modules/signal/domain/signal';
 import { UpdateSignal } from 'src/modules/signal/domain/update-signal';
 import { SignalModel } from '../schemas/signal.schema';
 import { SignalManagerInterface } from './signal.manager.interface';
+import { ERROR } from 'src/common/enum';
 
 @Injectable()
 export class SignalManager implements SignalManagerInterface {
@@ -32,7 +33,7 @@ export class SignalManager implements SignalManagerInterface {
   async update(data: UpdateSignal): Promise<Signal> {
     const model = await this.model.findOneAndUpdate(
       {
-        id: new Types.ObjectId(data.id),
+        _id: new Types.ObjectId(data.id),
       },
       {
         ...data,
@@ -41,6 +42,7 @@ export class SignalManager implements SignalManagerInterface {
         lean: true,
       },
     );
+    if (!model) throw new BadRequestException(ERROR.NOT_FOUND);
 
     return Signal.mk({ ...model, id: model._id.toString() });
   }
@@ -48,11 +50,12 @@ export class SignalManager implements SignalManagerInterface {
   async findOne(id: Signal.Id): Promise<Signal> {
     const model = await this.model.findOne(
       {
-        id: new Types.ObjectId(id),
+        _id: new Types.ObjectId(id),
       },
       {},
       { lean: true },
     );
+    if (!model) throw new BadRequestException(ERROR.NOT_FOUND);
 
     return Signal.mk({ ...model, id: model._id.toString() });
   }
@@ -60,11 +63,11 @@ export class SignalManager implements SignalManagerInterface {
   async remove(id: Signal.Id): Promise<Signal> {
     const model = await this.model.findOneAndDelete(
       {
-        id: new Types.ObjectId(id),
+        _id: new Types.ObjectId(id),
       },
       { lean: true },
     );
-
+    if (!model) throw new BadRequestException(ERROR.NOT_FOUND);
     return Signal.mk({ ...model, id: model._id.toString() });
   }
 
