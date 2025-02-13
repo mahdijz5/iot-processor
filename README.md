@@ -11,8 +11,8 @@ This project is built using **Domain-Driven Design (DDD)** principles with a **f
 ## **Tech Stack**
 
 - **Framework:** NestJS
-- **Architecture:** Clean Architecture + DDD
-- **API Documentation:** Swagger
+- **Architecture:**  DDD
+- **Message broker:** RabbitMq
 - **Database:** Mongodb
 - **Validation & Parsing:** Functional Approach (**Don't parse validate**)
 - **API Documentation:** Swagger
